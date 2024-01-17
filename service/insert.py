@@ -51,7 +51,8 @@ def insertar_usuario():
         postal_code = data.get('postal_code')
         country = data.get('country')
 
-        consulta_insercion = f"INSERT INTO users (email, password, first_name, last_name, address, postal_code, country) VALUES ('{email}', '{password}', '{first_name}', '{last_name}', '{address}', '{postal_code}', '{country}') RETURNING id;"
+        consulta_insercion = "INSERT INTO users (email, password, first_name, last_name, address, postal_code, country) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}') RETURNING id;".format(email, password, first_name, last_name, address, postal_code, country)
+
 
         cursor = db.cursor()
         cursor.execute(consulta_insercion)
@@ -69,7 +70,7 @@ def ejecutar_consulta():
     try:
         
         data = request.get_json()
-        consulta = data.get('SELECT * FROM users;')
+        consulta = data.get('SELECT')
 
         cursor = db.cursor()
         cursor.execute(consulta)
@@ -82,4 +83,5 @@ def ejecutar_consulta():
         return jsonify({'error: no puede mostrar resultado': str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
+

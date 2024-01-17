@@ -157,9 +157,16 @@ resource "google_compute_instance" "vm_instance" {
   network_interface {
     network    = google_compute_network.vpc_network.self_link
     subnetwork = google_compute_subnetwork.vm_subnetwork.name
+    access_config {
+      nat_ip = google_compute_address.public_ip_vm.address
+    }
   }
 
   metadata_startup_script = file("setup.sh")
+}
+
+resource "google_compute_address" "public_ip_vm" {
+  name = "public-ip-test-dba-01"
 }
 
 resource "google_compute_firewall" "vm_firewall" {
@@ -168,7 +175,7 @@ resource "google_compute_firewall" "vm_firewall" {
 
   allow {
     protocol = "tcp"
-    ports    = ["80", "22"]
+    ports    = ["80", "22", "5000"]
   }
 
   source_ranges = ["0.0.0.0/0"]
